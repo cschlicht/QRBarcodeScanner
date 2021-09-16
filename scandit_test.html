@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+
+<script src="https://cdn.jsdelivr.net/npm/scandit-sdk@5.x"></script>
+<script src="/node_modules/scandit-sdk/build/browser/index.min.js"></script>
+<head>
+  <style>
+    .container {
+      height: 200px;
+      position: relative;
+      border: 3px solid green;
+    }
+
+    .center {
+      text-align: center;
+    }
+    .button {
+      background-color: #4caf50; /* Green */
+      border: none;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      margin: 4px 2px;
+      cursor: pointer;
+    }
+
+    .button1 {
+      border-radius: 2px;
+    }
+    .button2 {
+      border-radius: 4px;
+    }
+    .button3 {
+      border-radius: 8px;
+    }
+    .button4 {
+      border-radius: 12px;
+    }
+    .button5 {
+      border-radius: 50%;
+    }
+  </style>
+</head>
+<body>
+  <!-- Test data for vehicle and starship-->
+  <button class="button button3" id="toggleVehicle" style="margin-left: 45%">
+    Vehicle
+  </button>
+  <button class="button button3" id="toggleStarship">Starship</button>
+  <div id="make" class="center"><b>Make: </b></div>
+  <div id="starMake" class="center">Starship</div>
+  <div id="v1Make" class="center">Toyota</div>
+  <div id="model" class="center"><br /><b>Model:</b></div>
+  <div id="starModel" class="center">6E</div>
+  <div id="v1Model" class="center">Corolla</div>
+  <div id="year" class="center"><br /><b>Year:</b></div>
+  <div id="v1Year" class="center">1996</div>
+  <div id="vin" class="center"><br /><b>Vin:</b></div>
+  <div id="starVin" class="center">6E15</div>
+  <div id="v1Vin" class="center">WBAAM3333XFP59732</div>
+  <br>
+  <div id="verify" class="center"><b>Please click the button below and scan the vehicle’s VIN barcode to confirm you are at the correct vehicle</b></div>
+  <button class="button button3" id="cameraButton" style="margin-left: 47%">
+    Verify VIN
+  </button>
+</body>
+
+
+
+<div id="scandit-barcode-result" class="result-text center"></div> <!-- this is the resulting text that tells you whether or not you are at the correct vehicle -->
+
+<!-- This is the actual camera that shows up when you are doing scans -->
+<scandit-barcode-picker
+  style="margin-left: 38%"
+  id="barcodePicker"
+  configure.licenseKey="AWlgrz/xH3R+PC4AXRZW9gwAfJjxMrHBoG8BTXpn7qgmRT14Xg4cmnJbE3ZjHZpXKVmOsA1xRGfwfuDgRWrm3uhXGgPfQ8ixiWxwEKhNcoHoIlhxhyMHnyEeUbutK/2AOYkrL394ow7xRW4ED6ieEe3f6+VEfLpyg3FXjXvSPLuQVO81B9avMEizBSJ9QU3QE+Xp2eMUgN0ImiQFrLgSB+9gIQNYX3o/5X5pqTxv/b8xTbwezSovv5AL9raYwGsfuOWSy6YZi9jUpA0T1Du0l+btz4PogcOc2pIAhvOcDvfGnGl1k70ABdgpLn7POldUrwZjDU3+o5V7gFRWFe3D1NEVHwcM8ux6nAO/8h3H9Y7ZbuGS3oOjE+Y/5LPB5Okh1rAJnXYyGvOlrc+1Is+wn3yN6oEDrQV0fbpayLcV9DDzmy9G04j60hD/Mk3KlPKDgCFe6/+bdofO1Ny2uF+yaCd4CXHmyCjlDkItXx9esgCbErvJafRwzZwmRaWaAn1moowdycu7usocA9NilNhmRig9Qv3HMSlQnOQtpRnjNIgJx+A2HODHdACCYXUxawoQD0DXuuMDxg5mn0c5OdaRxdPn7ZabnmlzLyo2KUbSULMjFVeT2yCg4ELbmbILKSA52g+NMaEOVObkcju3HD1YhkL46MnUWUKRFH+7wy5ycjoNcGbhXfi65DaaIvQUzJWNkb6C13ieMqiTBdm3yQ0v1EICOhCVED68DWHdInFS7d7bLD0KJ4i24FQnSCFC+7zlM4iNwCUEK5D9zxmIn6xEprzCKUr1Zha7Xz8/BIjf3A=="
+  configure.engineLocation="https://cdn.jsdelivr.net/npm/scandit-sdk@5.8/build/"
+  playSoundOnScan="false"
+  scanSettings.enabledSymbologies='["ean8", "ean13", "upca", "upce", "code128", "code39", "code93", "itf", "qr"]'
+  scanSettings.blurryRecognition="true"
+></scandit-barcode-picker>
+
+<script>
+  
+  const barcodePickerElement = document.getElementById("barcodePicker"); // linking the camera to "const barcodePickerElement"
+
+  const v1Make = document.getElementById("v1Make");
+  const v1Model = document.getElementById("v1Model");
+  const v1Year = document.getElementById("v1Year");
+  const v1Vin = document.getElementById("v1Vin");
+
+  const make = document.getElementById("make");
+  const model = document.getElementById("model");
+  const year = document.getElementById("year");
+  const vin = document.getElementById("vin");
+
+  const starMake = document.getElementById("starMake");
+  const starModel = document.getElementById("starModel");
+  const starVin = document.getElementById("starVin");
+
+  v1Make.style.display = "none";
+  v1Model.style.display = "none";
+  v1Year.style.display = "none";
+  v1Vin.style.display = "none";
+
+  make.style.display = "none";
+  model.style.display = "none";
+  year.style.display = "none";
+  vin.style.display = "none";
+
+  starMake.style.display = "none";
+  starModel.style.display = "none";
+  starVin.style.display = "none";
+
+
+
+  const vehicleButton = document.getElementById("toggleVehicle");
+  const starshipButton = document.getElementById("toggleStarship");
+  const cameraButton = document.getElementById("cameraButton");
+
+  const verifyText = document.getElementById("verify");
+
+  const barcodeResult = document.getElementById("scandit-barcode-result");
+
+  verifyText.style.display = "none";
+  barcodePickerElement.style.display = "none";
+  cameraButton.style.display = "none";
+
+  vehicleButton.onclick = function () {
+    cameraButton.style.display = "block";
+    verifyText.style.display = "block";
+    barcodePickerElement.style.display = "none";
+  
+    starMake.style.display = "none";
+    starModel.style.display = "none";
+    starVin.style.display = "none";
+    barcodeResult.innerHTML = "";
+    //toggling vehicle information on or off
+    if (v1Make.style.display !== "none") {
+      v1Make.style.display = "none";
+      v1Model.style.display = "none";
+      v1Vin.style.display = "none";
+      v1Year.style.display = "none";
+      make.style.display = "none";
+      model.style.display = "none";
+      year.style.display = "none";
+      vin.style.display = "none";
+      cameraButton.style.display = "none";
+      verifyText.style.display = "none";
+      barcodeResult.innerHTML = "";
+    } else {
+      v1Make.style.display = "block";
+      v1Model.style.display = "block";
+      v1Vin.style.display = "block";
+      v1Year.style.display = "block";
+      make.style.display = "block";
+      model.style.display = "block";
+      year.style.display = "block";
+      vin.style.display = "block";
+      cameraButton.style.display = "block";
+      verifyText.style.display = "block";
+    }
+    
+  };
+
+  starshipButton.onclick = function () {
+    cameraButton.style.display = "block";
+    verifyText.style.display = "block";
+    barcodePickerElement.style.display = "none";
+
+    v1Make.style.display = "none";
+    v1Model.style.display = "none";
+    v1Vin.style.display = "none";
+    v1Year.style.display = "none";
+    year.style.display = "none";
+    barcodeResult.innerHTML = "";
+    //toggling starship information on or off
+    if (starMake.style.display !== "none") {
+      starMake.style.display = "none";
+      starModel.style.display = "none";
+      starVin.style.display = "none";
+      make.style.display = "none";
+      model.style.display = "none";
+      year.style.display = "none";
+      vin.style.display = "none";
+      cameraButton.style.display = "none";
+      verifyText.style.display = "none";
+      barcodeResult.innerHTML = "";
+    } else {
+      starMake.style.display = "block";
+      starModel.style.display = "block";
+      starVin.style.display = "block";
+      make.style.display = "block";
+      model.style.display = "block";
+      vin.style.display = "block";
+      cameraButton.style.display = "block";
+      verifyText.style.display = "block";
+    }
+
+
+  };
+
+
+  cameraButton.onclick = function () {
+    if ( //this is where the toggling of the camera is done by the push of the "Verify VIN" button
+      barcodePickerElement.style.display !== "none"
+    ) {
+      barcodePickerElement.style.display = "none";
+      barcodeResult.innerHTML = "";
+    } else {
+      barcodePickerElement.style.display = "block"; 
+      barcodePickerElement.style.width = "450px";
+    }
+  };
+  //adding the scan event listener to the barcodePickerElement 
+  barcodePickerElement.addEventListener("scan", function (event) {
+      const scanResult = event.detail;
+      document.getElementById("scandit-barcode-result").innerHTML =
+        scanResult.barcodes.reduce(function (string, barcode) {
+          var test = string + ScanditSDK.Barcode.Symbology.toHumanizedName(barcode.symbology) + ": " + barcode.data + "\n"; //for vehicle, would print out "Code 39: 1NXBB02E1TZ457985"
+          //console.log(test);
+
+          var scanType = ScanditSDK.Barcode.Symbology.toHumanizedName(barcode.symbology); //prints out what type of barcode you are scanning (QR, Code 39, etc. )
+
+          if(scanType !== "Code 39" &&  scanType !== "QR") //edgeCase where camera randomly thought my teeth were a barcode somehow
+          {
+            return "";
+          }
+          //if the scanType is a QR (meaning we are scanning a starship, we want to extract the VIN from the link)
+          if (scanType === "QR") {
+            console.log(barcode.data);
+            var barcodeResult = barcode.data.split("/")[3]; //starship QR code is linked as follows: https://r.starship.co/6E15. this line of code extracts everything after the third '/'
+            var compareVin = document.getElementById("starVin").textContent; //grab test starVin if scanning QR code
+          } else {
+            barcodeResult = barcode.data;
+            compareVin = document.getElementById("v1Vin").textContent; //grab test vehicleVin if scanning Code 39
+          }
+          console.log(scanType);
+          console.log(barcodeResult);
+          if (barcodeResult === compareVin) { //in AndGo's case, "compareVin" would be the VIN retreived from the JDESummary response on the current page
+            document.getElementById("scandit-barcode-result").style.color = "green"; //set color to green if correct vin
+            return ("The VIN you scanned was: " + barcodeResult + ". You are at the correct vehicle. You may continue servicing this vehicle.");
+          } else {
+            document.getElementById("scandit-barcode-result").style.color = "red"; //set color to red if incorrect vin
+            return ("The VIN you scanned was: " + barcodeResult + ", which does not match the VIN of this vehicle. Please find the correct vehicle to start servicing.");
+          }
+        }, "");
+    });
+
+  
+</script>
